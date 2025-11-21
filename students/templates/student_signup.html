@@ -1,11 +1,43 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup - Student</title>
+    <link rel="stylesheet" href="{% static 'students/css/style.css' %}">
 </head>
 <body>
-    This is the student signup page
+    <form method="post" id="signUpForm">
+        {% csrf_token %}
+        Name: {{form.username}} <br>
+        Registration no: {{form.regno}} <br>
+        {% if form.username.errors %}
+            <div class="error"> {{form.username.errors.0}} </div>
+        {% endif %}
+        Semester: {{form.semester}} <br>
+        <div id="semester-error" class="error"></div>
+        Department: 
+        <select name="department" id="department">
+            <option value="Commerce" >Department of Commerce</option>
+            <option value="Computer Science" selected>Department of Computer Science</option>
+            <option value="History">Department of History</option>
+        </select> 
+        <br>
+        Course:
+        <select name="course" id="course">
+
+        </select>
+        <br>
+        <!-- Password: <input type="password" name="password" id="password"> <br> -->
+        Password: {{form.password}} <br>
+        Confirm Password: <input type="password" name="confirmPassword" id="confirm-password"> <br>
+        {% if form.password.errors %}
+            <div class="error"> {{form.password.errors.0}} </div>
+        {% endif %}
+        <div id="password-error" class="error"></div>
+        <button id="submit-button">Submit</button>
+    </form>
+    <script src="{% static "students/js/script.js" %}"></script>
 </body>
 </html>
