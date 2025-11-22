@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from students.forms import StudentForm
 from django.contrib.auth.models import User
+
+from students.forms import StudentForm, StudentSigninForm
+
 from students.models import Student
 from accounts.models import UserProfile
 
@@ -41,10 +43,9 @@ def signup_page(request):
                         form.add_error('password', "Both passwords should be same")
                         print("password error")
                     else:
-                        user = User.objects.create_user(
-                            username=email,
-                            password=password,
-                        )
+                        user = User(username=email)
+                        user.set_password(password)
+                        user.save()
 
                         userProfile = UserProfile.objects.create(
                             user=user,
@@ -62,13 +63,34 @@ def signup_page(request):
                         )
 
                         print("Successfull")
-                    
-        # else:
-        #     return render(request, 'student_signup.html', {
-        #         'form': form,
-        #     })
+   
     else: 
         form = StudentForm()
     return render(request, 'student_signup.html', {
+        'form': form,
+    })
+
+def signin_page(request):
+    if request.method == 'POST':
+        form = StudentSigninForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            if not Student.objects.filter(email=email).exists():
+                form.add_error('email', "This email doesn't have any account")
+                print("User not found matching email")
+            else:
+                user = User.objects.get(username=email)
+                if not user.check_password(password):
+                    form.add_error('password', "Password Error")
+                    print("Password Error")
+                else:
+                    print("Successfull")
+
+
+    else:
+        form = StudentSigninForm()
+    return render(request, 'student_signin.html', {
         'form': form,
     })
