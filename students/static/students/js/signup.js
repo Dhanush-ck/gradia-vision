@@ -42,13 +42,19 @@ handleCourse();
 semester.addEventListener('change', ()=> {
     const val = semester.value;
     if(val) {
-        if(val < 1 || val > 8 ) {
-            semesterError.innerHTML = 'Enter a valid semester';
-            submitBtn.disabled = true;
+        if(!isNaN(val)){
+            if(val < 1 || val > 8 ) {
+                semesterError.innerHTML = 'Enter a valid semester';
+                submitBtn.disabled = true;
+            }
+            else {
+                semesterError.innerHTML = "";
+                submitBtn.disabled = false;
+            }
         }
         else {
-            semesterError.innerHTML = "";
-            submitBtn.disabled = false;
+            semesterError.innerHTML = 'Semester should be in number';
+            submitBtn.disabled = true;
         }
     }
     else {
